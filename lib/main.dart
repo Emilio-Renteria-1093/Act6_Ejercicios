@@ -1,4 +1,5 @@
 import 'package:allflutterwidgetsexplained_1093/pagina_inicial.dart';
+import 'package:allflutterwidgetsexplained_1093/widget_11.dart';
 import 'package:allflutterwidgetsexplained_1093/widget_12.dart';
 import 'package:allflutterwidgetsexplained_1093/widget_13.dart';
 import 'package:allflutterwidgetsexplained_1093/widget_14.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => const PantallaUno(),
         // When navigating to the "/second" route, build the SecondScreen widget.
+        '/Ejercicio 11': (context) => const Widget011(),
         '/Ejercicio 12': (context) => const Widget012(),
         '/Ejercicio 13': (context) => const Widget013(),
         '/Ejercicio 14': (context) => const Widget014(),
