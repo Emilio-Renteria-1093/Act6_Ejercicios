@@ -22,7 +22,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 12');
+                Navigator.pushNamed(context, '/Ejercicio 11');
               },
               child: const Text('Ejercicio 12'),
             ),
@@ -31,7 +31,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 13');
+                Navigator.pushNamed(context, '/Ejercicio 12');
               },
               child: const Text('Ejercicio 13'),
             ),
@@ -40,7 +40,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 14');
+                Navigator.pushNamed(context, '/Ejercicio 13');
               },
               child: const Text('Ejercicio 14'),
             ),
@@ -49,7 +49,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 15');
+                Navigator.pushNamed(context, '/Ejercicio 14');
               },
               child: const Text('Ejercicio 15'),
             ),
@@ -58,7 +58,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 16');
+                Navigator.pushNamed(context, '/Ejercicio 15');
               },
               child: const Text('Ejercicio 16'),
             ),
@@ -67,7 +67,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 17');
+                Navigator.pushNamed(context, '/Ejercicio 16');
               },
               child: const Text('Ejercicio 17'),
             ),
@@ -76,7 +76,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 18');
+                Navigator.pushNamed(context, '/Ejercicio 17');
               },
               child: const Text('Ejercicio 18'),
             ),
@@ -85,7 +85,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 19');
+                Navigator.pushNamed(context, '/Ejercicio 18');
               },
               child: const Text('Ejercicio 19'),
             ),
@@ -94,7 +94,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 20');
+                Navigator.pushNamed(context, '/Ejercicio 19');
               },
               child: const Text('Ejercicio 20'),
             ),
@@ -103,7 +103,7 @@ class PantallaUno extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/Ejercicio 21');
+                Navigator.pushNamed(context, '/Ejercicio 20');
               },
               child: const Text('Ejercicio 21'),
             ),

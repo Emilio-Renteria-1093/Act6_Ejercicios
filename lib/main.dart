@@ -1,5 +1,4 @@
 import 'package:allflutterwidgetsexplained_1093/pagina_inicial.dart';
-import 'package:allflutterwidgetsexplained_1093/widget_11.dart';
 import 'package:allflutterwidgetsexplained_1093/widget_12.dart';
 import 'package:allflutterwidgetsexplained_1093/widget_13.dart';
 import 'package:allflutterwidgetsexplained_1093/widget_14.dart';
@@ -42,7 +41,6 @@ class MyApp extends StatelessWidget {
         '/Ejercicio 18': (context) => const Widget018(),
         '/Ejercicio 19': (context) => const Widget019(),
         '/Ejercicio 20': (context) => const Widget020(),
-        '/Ejercicio 21': (context) => const MyStatefulWidget(),
       },
     );
   }

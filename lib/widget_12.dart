@@ -1,98 +1,65 @@
 import 'package:flutter/material.dart';
 
-//! AnimatedList
-
-class Widget012 extends StatefulWidget {
-  const Widget012({Key? key}) : super(key: key);
+class Widget011 extends StatefulWidget {
+  const Widget011({Key? key}) : super(key: key);
 
   @override
-  Widget012State createState() => Widget012State();
+  State<Widget011> createState() => _Widget11State();
 }
 
-class Widget012State extends State<Widget012> {
-  final _items = [];
-  final GlobalKey<AnimatedListState> _key = GlobalKey();
+class _Widget11State extends State<Widget011> with TickerProviderStateMixin {
+  bool _isPlay = false;
+  late AnimationController _controller;
 
-  void _addItem() {
-    _items.insert(0, "Item ${_items.length + 1}");
-    _key.currentState!.insertItem(
-      0,
+  @override
+  void initState() {
+    _controller = AnimationController(
       duration: const Duration(seconds: 1),
+      vsync: this,
     );
+    super.initState();
   }
 
-  void _removeItem(int index) {
-    _key.currentState!.removeItem(
-      index,
-      (_, animation) {
-        return SizeTransition(
-          sizeFactor: animation,
-          child: const Card(
-            margin: EdgeInsets.all(10),
-            color: Colors.red,
-            child: ListTile(
-              title: Text(
-                "Deleted",
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-          ),
-        );
-      },
-      duration: const Duration(milliseconds: 300),
-    );
-    _items.removeAt(index);
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<bool> _onWillPop() async {
+    // Puedes hacer alguna acción aquí si necesitas
+    return true; // permite la salida
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Animated List Demo"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // Navegar hacia atrás
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Animated Icon'),
+          leading: BackButton(onPressed: () {
+            Navigator.of(context).pop(); // acción del botón de appbar
+          }),
         ),
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          IconButton(
-            onPressed: _addItem,
-            icon: const Icon(Icons.add),
-          ),
-          Expanded(
-            child: AnimatedList(
-              key: _key,
-              initialItemCount: 0,
-              padding: const EdgeInsets.all(10),
-              itemBuilder: (context, index, animation) {
-                return SizeTransition(
-                  key: UniqueKey(),
-                  sizeFactor: animation,
-                  child: Card(
-                    margin: const EdgeInsets.all(10),
-                    color: Colors.orangeAccent,
-                    child: ListTile(
-                      title: Text(
-                        _items[index],
-                        style: const TextStyle(fontSize: 24),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          _removeItem(index);
-                        },
-                      ),
-                    ),
-                  ),
-                );
-              },
+        body: Center(
+          child: GestureDetector(
+            onTap: () {
+              if (_isPlay == false) {
+                _controller.forward();
+                _isPlay = true;
+              } else {
+                _controller.reverse();
+                _isPlay = false;
+              }
+            },
+            child: AnimatedIcon(
+              icon: AnimatedIcons.play_pause,
+              progress: _controller,
+              size: 100,
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -1,69 +1,63 @@
-//! AnimatedPositioned
-
 import 'package:flutter/material.dart';
 
-class Widget017 extends StatefulWidget {
-  const Widget017({Key? key}) : super(key: key);
+//! AnimatedPhysicalModel
+
+class Widget016 extends StatefulWidget {
+  const Widget016({Key? key}) : super(key: key);
 
   @override
-  State<Widget017> createState() => _Widget017State();
+  Widget016State createState() => Widget016State();
 }
 
-class _Widget017State extends State<Widget017> {
-  bool selected = false;
+class Widget016State extends State<Widget016> {
+  bool _isFlat = true;
+
+  Future<bool> _onWillPop() async {
+    return true; // permite volver atrás
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('AnimatedPositioned'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Animated PhysicalModel'),
+          leading: BackButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 200,
-              height: 350,
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
-                    width: selected ? 200.0 : 50.0,
-                    height: selected ? 50.0 : 200.0,
-                    top: selected ? 50.0 : 150.0,
-                    duration: const Duration(seconds: 2),
-                    curve: Curves.fastOutSlowIn,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selected = !selected;
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.orangeAccent,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              AnimatedPhysicalModel(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.fastOutSlowIn,
+                elevation: _isFlat ? 0 : 6.0,
+                shape: BoxShape.rectangle,
+                shadowColor: Colors.black,
+                color: Colors.white,
+                child: const SizedBox(
+                  height: 120.0,
+                  width: 120.0,
+                  child: Icon(Icons.android_outlined),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Regresar'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              ElevatedButton(
+                child: const Text('Click'),
+                onPressed: () {
+                  setState(() {
+                    _isFlat = !_isFlat;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

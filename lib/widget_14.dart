@@ -1,56 +1,103 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
-//! AnimatedOpacity
+//! AnimatedModalBarrier
 
-class Widget014 extends StatefulWidget {
-  const Widget014({Key? key}) : super(key: key);
+class Widget013 extends StatefulWidget {
+  const Widget013({Key? key}) : super(key: key);
 
   @override
-  State<Widget014> createState() => Widget014State();
+  State<StatefulWidget> createState() => _Widget013State();
 }
 
-class Widget014State extends State<Widget014> {
-  double opacityLevel = 1.0;
+class _Widget013State extends State<Widget013>
+    with SingleTickerProviderStateMixin {
+  bool _isPressed = false;
+
+  late AnimationController _animationController;
+  late Animation<Color?> _colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    ColorTween _colorTween = ColorTween(
+      begin: Colors.orangeAccent.withOpacity(0.5),
+      end: Colors.blueGrey.withOpacity(0.5),
+    );
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    );
+
+    _colorAnimation = _colorTween.animate(_animationController);
+  }
+
+  Future<bool> _onWillPop() async {
+    return true; // permite regresar
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('AnimatedOpacity'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Animated Modal Barrier'),
+          leading: BackButton(onPressed: () {
+            Navigator.of(context).pop();
+          }),
         ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            AnimatedOpacity(
-              opacity: opacityLevel,
-              duration: const Duration(seconds: 2),
-              child: const FlutterLogo(
-                size: 50,
-              ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 100.0,
+                  width: 250.0,
+                  child: Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orangeAccent,
+                        ),
+                        child: const Text('Press'),
+                        onPressed: () {
+                          setState(() {
+                            _isPressed = true;
+                          });
+                          _animationController.reset();
+                          _animationController.forward();
+                          Future.delayed(const Duration(seconds: 3), () {
+                            if (mounted) {
+                              setState(() {
+                                _isPressed = false;
+                              });
+                            }
+                          });
+                        },
+                      ),
+                      if (_isPressed)
+                        AnimatedModalBarrier(
+                          color: _colorAnimation,
+                          dismissible: true,
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            ElevatedButton(
-              child: const Text('Fade Logo'),
-              onPressed: () {
-                setState(
-                  () => opacityLevel = opacityLevel == 0 ? 1.0 : 0.0,
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              child: const Text('Regresar'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

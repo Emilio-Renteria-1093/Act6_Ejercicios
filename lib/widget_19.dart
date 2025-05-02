@@ -1,52 +1,54 @@
-//! AnimatedSize
-
 import 'package:flutter/material.dart';
 
-class Widget019 extends StatefulWidget {
-  const Widget019({Key? key}) : super(key: key);
+//! AnimatedRotation
+
+class Widget018 extends StatefulWidget {
+  const Widget018({Key? key}) : super(key: key);
 
   @override
-  State<Widget019> createState() => _Widget019State();
+  State<Widget018> createState() => Widget018State();
 }
 
-class _Widget019State extends State<Widget019> with TickerProviderStateMixin {
-  double _size = 300;
+class Widget018State extends State<Widget018> {
+  double turns = 0.0;
+
+  Future<bool> _onWillPop() async {
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('AnimatedSize'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Animated Rotation'),
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
-      ),
-      body: GestureDetector(
-        onTap: () {
-          setState(() {
-            _size = _size == 300 ? 100 : 300;
-          });
-        },
-        child: Container(
-          color: Colors.white,
-          width: double.infinity,
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AnimatedSize(
-                curve: Curves.easeIn,
-                duration: const Duration(seconds: 1),
-                child: FlutterLogo(size: _size),
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(50),
+                child: AnimatedRotation(
+                  turns: turns,
+                  duration: const Duration(seconds: 1),
+                  child: const FlutterLogo(
+                    size: 100,
+                  ),
+                ),
               ),
-              const SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orangeAccent,
+                ),
+                child: const Text('Rotate Logo'),
                 onPressed: () {
-                  Navigator.pop(context);
+                  setState(() => turns += 1 / 4);
                 },
-                child: const Text('Regresar'),
               ),
             ],
           ),

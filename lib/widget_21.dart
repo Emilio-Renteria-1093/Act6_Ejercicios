@@ -1,73 +1,61 @@
-//! AnimatedWidget
-
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
+//! AnimatedSwitcher
+
+class Widget020 extends StatefulWidget {
+  const Widget020({Key? key}) : super(key: key);
 
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<Widget020> createState() => _Widget020State();
 }
 
-/// AnimationControllers can be created with `vsync: this` because of TickerProviderStateMixin.
-class _MyStatefulWidgetState extends State<MyStatefulWidget>
-    with TickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(seconds: 10),
-    vsync: this,
-  )..repeat();
+class _Widget020State extends State<Widget020> {
+  int _count = 0;
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Future<bool> _onWillPop() async {
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('AnimatedWidget'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Animated Switcher'),
+          leading: BackButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                child: Text(
+                  '$_count',
+                  style: const TextStyle(fontSize: 40),
+                  key: ValueKey(_count),
+                ),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(scale: animation, child: child);
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Add'),
+                onPressed: () {
+                  setState(() {
+                    _count += 1;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TheWidget(controller: _controller),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Regresar'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class TheWidget extends AnimatedWidget {
-  const TheWidget({
-    Key? key,
-    required AnimationController controller,
-  }) : super(key: key, listenable: controller);
-
-  Animation<double> get _progress => listenable as Animation<double>;
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.rotate(
-      angle: _progress.value * 2.0 * math.pi,
-      child: Container(width: 200.0, height: 200.0, color: Colors.green),
     );
   }
 }

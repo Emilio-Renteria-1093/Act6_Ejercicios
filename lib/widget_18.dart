@@ -1,60 +1,63 @@
-//! AnimatedRotation
-
 import 'package:flutter/material.dart';
 
-class Widget018 extends StatefulWidget {
-  const Widget018({Key? key}) : super(key: key);
+//! AnimatedPositioned
+
+class Widget017 extends StatefulWidget {
+  const Widget017({Key? key}) : super(key: key);
 
   @override
-  State<Widget018> createState() => Widget018State();
+  State<Widget017> createState() => _Widget017State();
 }
 
-class Widget018State extends State<Widget018> {
-  double turns = 0.0;
+class _Widget017State extends State<Widget017> {
+  bool selected = false;
+
+  Future<bool> _onWillPop() async {
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('AnimatedRotation'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Animated Positioned'),
+          leading: BackButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(50),
-              child: AnimatedRotation(
-                turns: turns,
-                duration: const Duration(seconds: 1),
-                child: const FlutterLogo(
-                  size: 100,
+        body: Center(
+          child: SizedBox(
+            width: 200,
+            height: 350,
+            child: Stack(
+              children: <Widget>[
+                AnimatedPositioned(
+                  width: selected ? 200.0 : 50.0,
+                  height: selected ? 50.0 : 200.0,
+                  top: selected ? 50.0 : 150.0,
+                  duration: const Duration(seconds: 2),
+                  curve: Curves.fastOutSlowIn,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selected = !selected;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.orangeAccent,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            ElevatedButton(
-              child: const Text('Rotate Logo'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orangeAccent,
-              ),
-              onPressed: () {
-                setState(() => turns += 1 / 4);
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Regresar'),
-            ),
-          ],
+          ),
         ),
       ),
     );

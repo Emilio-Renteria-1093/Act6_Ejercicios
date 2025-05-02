@@ -1,95 +1,102 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
-//! AnimatedModalBarrier
+//! AnimatedList
 
-class Widget013 extends StatefulWidget {
-  const Widget013({Key? key}) : super(key: key);
+class Widget012 extends StatefulWidget {
+  const Widget012({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _Widget013State();
+  Widget012State createState() => Widget012State();
 }
 
-class _Widget013State extends State<Widget013>
-    with SingleTickerProviderStateMixin {
-  bool _isPressed = false;
+class Widget012State extends State<Widget012> {
+  final _items = [];
+  final GlobalKey<AnimatedListState> _key = GlobalKey();
 
-  late AnimationController _animationController;
-  late Animation<Color?> _colorAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final colorTween = ColorTween(
-      begin: Colors.orangeAccent.withOpacity(0.5),
-      end: Colors.blueGrey.withOpacity(0.5),
+  void _addItem() {
+    _items.insert(0, "Item ${_items.length + 1}");
+    _key.currentState!.insertItem(
+      0,
+      duration: const Duration(seconds: 1),
     );
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-
-    _colorAnimation = colorTween.animate(_animationController);
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose(); // Limpieza importante
-    super.dispose();
+  void _removeItem(int index) {
+    _key.currentState!.removeItem(
+      index,
+      (_, animation) {
+        return SizeTransition(
+          sizeFactor: animation,
+          child: const Card(
+            margin: EdgeInsets.all(10),
+            color: Colors.red,
+            child: ListTile(
+              title: Text(
+                "Deleted",
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+          ),
+        );
+      },
+      duration: const Duration(milliseconds: 300),
+    );
+    _items.removeAt(index);
+  }
+
+  Future<bool> _onWillPop() async {
+    // Puedes agregar lógica aquí si lo necesitas
+    return true; // permite salir
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Animated Modal Barrier"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Animated List'),
+          leading: BackButton(onPressed: () {
+            Navigator.of(context).pop();
+          }),
         ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 100.0,
-                width: 250.0,
-                child: Stack(
-                  alignment: AlignmentDirectional.center,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orangeAccent,
+        body: Column(
+          children: [
+            const SizedBox(height: 10),
+            IconButton(
+              onPressed: _addItem,
+              icon: const Icon(Icons.add),
+            ),
+            Expanded(
+              child: AnimatedList(
+                key: _key,
+                initialItemCount: 0,
+                padding: const EdgeInsets.all(10),
+                itemBuilder: (context, index, animation) {
+                  return SizeTransition(
+                    key: UniqueKey(),
+                    sizeFactor: animation,
+                    child: Card(
+                      margin: const EdgeInsets.all(10),
+                      color: Colors.orangeAccent,
+                      child: ListTile(
+                        title: Text(
+                          _items[index],
+                          style: const TextStyle(fontSize: 24),
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            _removeItem(index);
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isPressed = true;
-                        });
-                        _animationController.reset();
-                        _animationController.forward();
-                        Future.delayed(const Duration(seconds: 3), () {
-                          setState(() {
-                            _isPressed = false;
-                          });
-                        });
-                      },
-                      child: const Text('Press'),
                     ),
-                    if (_isPressed)
-                      AnimatedModalBarrier(
-                        color: _colorAnimation,
-                        dismissible: false,
-                      ),
-                  ],
-                ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
